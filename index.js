@@ -1,32 +1,22 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 
-
-var books = [
-  {
-    title: 'Harry Potter 1',
-    rating: 9
-  },
-  {
-    title: 'HP 4',
-    rating: 10
-  }
-]
+var booksController = require('./controllers/books_controller')
 
 var app = express();
-app.use(bodyParser.json())
-
+app.use(bodyParser.json());
 app.use(express.static('public'));
 
-app.get('/books', function(req, res, next){
-  res.status(200).json(books);
+app.use(function(req, res, next){
+  console.log('params: ', req.params);
+  console.log('query: ', req.query);
+  console.log('body: ', req.body);
+  next();
 })
 
-app.post('/books', function(req, res, next){
-  books.push(req.body);
-  res.status(200).json(books)
-
-});
+app.get('/books', booksController.index );
+app.get('/books/:id', booksController.show);
+app.post('/books', booksController.create);
 
 
 
